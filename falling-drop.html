@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>My first three.js app</title>
+    <link rel="stylesheet" href="styles/default.css">
+</head>
+<body>
+    <script src="scripts/three.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 100);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var numberOfTorus = 7;
+        var geometries = [];
+        var tori = [];
+
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xaabbff,
+            wireframe: true
+        });
+        
+        for(var i = 0; i < numberOfTorus; i++){
+            geometries.push(new THREE.TorusGeometry(4 + i*3, 1, 16, 50));
+            tori.push(new THREE.Mesh(geometries[i], material));
+            scene.add(tori[i]);
+        }
+
+        tori.forEach( t => t.rotation.x = Math.PI / 2);
+
+        camera.position.z = 25;
+        camera.position.y = 10;
+
+        counter = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            tori.forEach((t,i)=> {
+                t.position.y += Math.sin(counter + i/10);
+            });
+            counter = (counter + .05) % (Math.PI * 2) 
+        }
+        animate();
+    </script>
+</body>
+</html>
